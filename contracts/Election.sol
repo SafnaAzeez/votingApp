@@ -9,6 +9,10 @@ contract Election{
     }
     mapping (address => bool) public voters;
     mapping (uint => Candidate) public candidates;
+
+    event votedEvent(
+        uint indexed _candidateId
+    );
     uint public candidatesCount;
     function addCandidate(string _name) private {
         candidatesCount++;
@@ -22,7 +26,8 @@ contract Election{
         voters[msg.sender] = true;
         
         candidates[_candidateId].voteCount++;
-    }               
+        emit votedEvent(_candidateId);
+    } 
 
     constructor () public {
         addCandidate("Candidate 1");

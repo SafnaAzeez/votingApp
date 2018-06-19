@@ -25,7 +25,7 @@ App = {
     
       // Set the provider for our contract
       App.contracts.Election.setProvider(App.web3Provider);
-    
+      App.listenForEvents();
       // Use our contract to retrieve and mark the adopted pets
       return App.render();
     });
@@ -83,6 +83,18 @@ App = {
       }).catch(function(error) {
       console.warn(error);
       });
+  },
+
+  listenForEvents: function(){
+    App.contracts.Election.deployed().then( function(instance){
+      instance.votedEvent({},{
+        fromBlock: 0,
+        toBlock: 'latest'
+      }).watch(function(error,event){
+        console.log("event triggered",event);
+        App.render();
+      })
+    })
   },
 
   castVote: function(){
